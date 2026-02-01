@@ -1,0 +1,38 @@
+# ==============================================================
+# podman-compose.yml — Entorno de desarrollo Rust
+# ==============================================================
+# Servicio único: rustdev
+#   - Monta tu código local en /app/src
+#   - Volumen separado para target/ (cache de compilación)
+#     Esto evita que cada restart recompile todo desde cero.
+#   - Sin puertos expuestos por defecto: los añades según
+#     necesite tu proyecto (ej: actix-web, actix en 8080…)
+# ==============================================================
+
+version: "3.8"
+
+services:
+  rustdev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rustdev:latest
+    container_name: rustdev
+
+    volumes:
+      # Tu código local
+      - ./src:/app/src:z
+      # Cache de compilación persistente entre restarts.
+      # Sin esto, cada `podman-compose up` recompila todo.
+      - rust_target_cache:/app/src/target
+
+    # Modo interactivo (para bash dentro del contenedor)
+    stdin_open: true
+    tty: true
+
+    # Si tu proyecto escucha en un puerto, descomenta y ajusta:
+    # ports:
+    #   - "8080:8080"
+
+volumes:
+  rust_target_cache:

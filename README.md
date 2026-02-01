@@ -7,3 +7,10 @@ web_dev/
 └── README.md           → Este archivo
 ```
 
+```
+rust/
+├── Dockerfile
+├── podman-compose.yml
+├── src/
+└── README.md
+```
